@@ -1,0 +1,39 @@
+#!/bin/bash
+# briefly flash active tmux pane background color
+
+# tmux-pane-flash [ STEP DURATION in seconds ] [ PRESET NAME | SEQUENCE OF HEX COLORS ]
+
+# Default to 0.05s = 50ms
+STEP_DURATION=${1:-0.05}
+shift
+
+declare -A PRESETS
+PRESETS=(
+  [GREEN]="003f00 002f00 000f00"
+  [RED]="3f0000 2f0000 0f0000"
+  [GRAY]="9f9f9f 8f8f8f 3f3f3f 2f2f2f 1f1f1f 0f0f0f"
+  [PHUNKY]="ff0000 ffff00 0fff00"
+)
+
+# Set colors according to number of arguments given
+case ${#} in
+ 0) [ "$(id -u)" -eq 0 ] \
+      && COLORS="${PRESETS[RED]}" \
+      || COLORS="${PRESETS[GREEN]}"
+    ;;
+ 1) COLORS="${PRESETS[${1}]}"
+    ;;
+ *) COLORS="${*}"
+    ;;
+esac
+
+{
+  # Unset the bg style on exit
+  trap 'tmux set -u window-active-style' 0 1 2 3 15
+
+  for COLOR in $COLORS
+  do
+    tmux set window-active-style bg="#$COLOR"
+    sleep $STEP_DURATION
+  done 
+} &
