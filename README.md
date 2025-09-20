@@ -24,8 +24,11 @@ Just remove the plugin line from your `.tmux.conf` and use `tmux set-hook -gu pa
 
 ## Configuration
 
-There are two variables which allow controlling the duration each color is displayed for and the sequence of colors itself.
-The color change interval defaults to `0.05` s, with the color indicating whether `tmux` is running as root (RED color) or other user (GREEN color). You can easily override this by specifying the name of one of the four included presets to use, or a sequence of hex colors of your own choice. To apply any changes set in this way, the `pane-flash.tmux` script has to be rerun, as for performance reasons the variables are only read once during hook setup.
+There are a couple variables which allow controlling the duration each color is displayed for and the sequence of colors itself.
+The color change interval defaults to `0.05` s, with the color indicating whether `tmux` is running as root (RED color) or other user (GREEN color). You can easily override this by specifying the name of one of the four included presets to use, or a sequence of hex colors of your own choice.
+Also, by default, the hook will not flash single-pane windows.
+
+**To apply any changes set in this way, the `pane-flash.tmux` script has to be rerun**, as for performance reasons the variables are only read once during hook setup.
 
 ```
 # Configuration Examples
@@ -41,6 +44,12 @@ set -g @tmux-pane-flash-preset "GRAY"
 
 # Use a custom hex color sequence, f.e. a subtle CMY
 set -g @tmux-pane-flash-preset "00cccc cc00cc cccc00"
+
+# Flash pane even in windows with a single pane only
+set -g @tmux-pane-flash-hook-cmd "\"run-shell -b 'flock --nonblock -E0 /run/lock/tmux-flash.\$(id -u) \$CWD/tmux-pane-flash \$interval \$preset'\""
+
+# Testing how locking prevents multiple flash processes
+set -g @tmux-pane-flash-hook-cmd "\"run-shell -b 'flock --nonblock /run/lock/tmux-flash.\$(id -u) \$CWD/tmux-pane-flash || beep'\""
 ```
 
 ## License
