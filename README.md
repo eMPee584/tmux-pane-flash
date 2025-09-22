@@ -34,22 +34,22 @@ Also, by default, the hook will not flash single-pane windows.
 # Configuration Examples
 
 # Slow it down a bit while you design your favorite color sequence
-set -g @tmux-pane-flash-interval 0.4
+set -g @pane-flash-interval 0.4
 
 # Unset preset to return to defaults
-set -gu @tmux-pane-flash-preset
+set -gu @pane-flash-preset
 
 # Use the GRAY preset
-set -g @tmux-pane-flash-preset "GRAY"
+set -g @pane-flash-preset "GRAY"
 
 # Use a custom hex color sequence, f.e. a subtle CMY
-set -g @tmux-pane-flash-preset "00cccc cc00cc cccc00"
+set -g @pane-flash-preset "00cccc cc00cc cccc00"
 
 # Flash pane even in windows with a single pane only
-set -g @tmux-pane-flash-hook-cmd "\"run-shell -b 'flock --nonblock -E0 /run/lock/tmux-flash.\$(id -u) \$CWD/tmux-pane-flash \$interval \$preset'\""
+set -g @pane-flash-hook-cmd "\"run-shell -b 'flock --nonblock -E0 /run/lock/tmux-flash.\$(id -u) \$CWD/tmux-pane-flash \$interval \$preset'\""
 
 # Testing how locking prevents multiple flash processes
-set -g @tmux-pane-flash-hook-cmd "\"run-shell -b 'flock --nonblock /run/lock/tmux-flash.\$(id -u) \$CWD/tmux-pane-flash || beep'\""
+set -g @pane-flash-hook-cmd "\"run-shell -b 'flock --nonblock /run/lock/tmux-flash.\$(id -u) \$CWD/tmux-pane-flash || beep'\""
 ```
 
 ## License
