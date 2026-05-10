@@ -3,6 +3,7 @@
 
 # tmux-pane-flash [ STEP DURATION in seconds ] [ PRESET NAME | SEQUENCE OF HEX COLORS ]
 
+# First parameter (if present) is used as delay time between bg colors
 # Default to 0.05s = 50ms
 STEP_DURATION=${1:-0.05}
 shift
@@ -16,6 +17,10 @@ PRESETS=(
 )
 
 # Set colors according to number of arguments given
+# - If no argument given, RED preset is used for root,
+#   GREEN for any other user.
+# - One argument is interpreted as preset name.
+# - Multiple arguments are interpreted as hex color sequence.
 case ${#} in
  0) [ "$(id -u)" -eq 0 ] \
       && COLORS="${PRESETS[RED]}" \
